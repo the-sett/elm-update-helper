@@ -1,13 +1,16 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "summary": "Helper functions for nesting updates in Elm.",
     "repository": "https://github.com/the-sett/elm-update-helper.git",
     "license": "BSD",
     "source-directories": [
         "src/"
     ],
-    "exposed-modules": [ "Update2", "Update3", "Task.Extra" ],
-    "native-modules": false,
+    "exposed-modules": [
+        "Update2",
+        "Update3",
+        "Task.Extra"
+    ],
     "dependencies": {
         "elm-lang/core": "5.0.0 <= v < 6.0.0"
     },
