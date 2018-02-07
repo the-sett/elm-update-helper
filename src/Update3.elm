@@ -4,13 +4,14 @@ module Update3
         , eval
         , evalMaybe
         , evalResult
+        , evalCmds
         )
 
 {-| Convenience function for lifting an update function for an inner model and
 messages, that also returns an additional out parameters into a parent one.
 
 @docs lift
-@docs eval, evalMaybe, evalResult
+@docs eval, evalMaybe, evalResult, evalCmds
 
 -}
 
@@ -113,3 +114,21 @@ evalResult func onErr ( model, cmds, resultOutMsg ) =
                     ( model, onErr error )
     in
         ( newModel, Cmd.batch [ cmds, moreCmds ] )
+
+
+{-| Allows the output of an update function that returns type:
+
+       (model, Cmd msg, Cmd outmsg)
+
+To have its model and out message evaluated in order to produce a new model,
+and to create more commands. The commands returned will be appended to those
+passed in using Cmd.batch.
+
+Note that the eval function in this case is not provided with the model, since the
+commands being processed are opaque, so it should not be possible to make a decision
+on how to update the model based on them.
+
+-}
+evalCmds : (outmsg -> msg) -> ( model, Cmd msg, Cmd outmsg ) -> ( model, Cmd msg )
+evalCmds tagger ( model, cmds, outCmds ) =
+    ( model, Cmd.batch [ cmds, outCmds |> Cmd.map tagger ] )
