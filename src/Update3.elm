@@ -2,13 +2,15 @@ module Update3
     exposing
         ( lift
         , eval
+        , evalMaybe
+        , evalResult
         )
 
 {-| Convenience function for lifting an update function for an inner model and
 messages, that also returns an additional out parameters into a parent one.
 
 @docs lift
-@docs eval
+@docs eval, evalMaybe, evalResult
 
 -}
 
