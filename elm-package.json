@@ -1,5 +1,5 @@
 {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "summary": "Helper functions for nesting updates in Elm.",
     "repository": "https://github.com/the-sett/elm-update-helper.git",
     "license": "BSD",
