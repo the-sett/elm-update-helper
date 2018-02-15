@@ -5,6 +5,9 @@ module Update3
         , evalMaybe
         , evalResult
         , evalCmds
+        , mapModel
+        , mapCmd
+        , mapOutMsg
         )
 
 {-| Convenience function for lifting an update function for an inner model and
@@ -12,6 +15,7 @@ messages, that also returns an additional out parameters into a parent one.
 
 @docs lift
 @docs eval, evalMaybe, evalResult, evalCmds
+@docs mapModel, mapCmd, mapOutMsg
 
 -}
 
@@ -132,3 +136,24 @@ on how to update the model based on them.
 evalCmds : (outmsg -> msg) -> ( model, Cmd msg, Cmd outmsg ) -> ( model, Cmd msg )
 evalCmds tagger ( model, cmds, outCmds ) =
     ( model, Cmd.batch [ cmds, outCmds |> Cmd.map tagger ] )
+
+
+{-| Maps over the model.
+-}
+mapModel : (model -> a) -> ( model, b, c ) -> ( a, b, c )
+mapModel func ( model, cmds, outmsg ) =
+    ( func model, cmds, outmsg )
+
+
+{-| Maps over the Cmds
+-}
+mapCmd : (msga -> msgb) -> ( a, Cmd msga, c ) -> ( a, Cmd msgb, c )
+mapCmd func ( model, cmds, outmsg ) =
+    ( model, Cmd.map func cmds, outmsg )
+
+
+{-| Maps over the out message
+-}
+mapOutMsg : (outMsg -> c) -> ( a, b, outMsg ) -> ( a, b, c )
+mapOutMsg func ( model, cmds, outmsg ) =
+    ( model, cmds, func outmsg )
