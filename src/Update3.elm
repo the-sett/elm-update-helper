@@ -8,6 +8,7 @@ module Update3
         , mapModel
         , mapCmd
         , mapOutMsg
+        , addOutMsg
         )
 
 {-| Convenience function for lifting an update function for an inner model and
@@ -16,6 +17,7 @@ messages, that also returns an additional out parameters into a parent one.
 @docs lift
 @docs eval, evalMaybe, evalResult, evalCmds
 @docs mapModel, mapCmd, mapOutMsg
+@docs addOutMsg
 
 -}
 
