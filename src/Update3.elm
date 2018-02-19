@@ -157,3 +157,10 @@ mapCmd func ( model, cmds, outmsg ) =
 mapOutMsg : (outMsg -> c) -> ( a, b, outMsg ) -> ( a, b, c )
 mapOutMsg func ( model, cmds, outmsg ) =
     ( model, cmds, func outmsg )
+
+
+{-| Adds an out message to the usual (model, Cmd msg) structure.
+-}
+addOutMsg : outMsg -> ( model, Cmd msg ) -> ( model, Cmd msg, outMsg )
+addOutMsg outmsg ( model, cmd ) =
+    ( model, cmd, outmsg )
