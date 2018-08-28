@@ -1,15 +1,9 @@
-module Update3
-    exposing
-        ( lift
-        , eval
-        , evalMaybe
-        , evalResult
-        , evalCmds
-        , mapModel
-        , mapCmd
-        , mapOutMsg
-        , addOutMsg
-        )
+module Update3 exposing
+    ( lift
+    , eval, evalMaybe, evalResult, evalCmds
+    , mapModel, mapCmd, mapOutMsg
+    , addOutMsg
+    )
 
 {-| Convenience function for lifting an update function for an inner model and
 messages, that also returns an additional out parameters into a parent one.
@@ -28,7 +22,7 @@ messages, that also returns an additional out parameters into a parent one.
 
 Into one that returns:
 
-    (model, Cmd  msg, outmsg)
+    ( model, Cmd msg, outmsg )
 
 -}
 lift :
@@ -44,12 +38,12 @@ lift get set tagger update subMsg model =
         ( updatedSubModel, subCmd, outMsg ) =
             update subMsg (get model)
     in
-        ( set updatedSubModel model, Cmd.map tagger subCmd, outMsg )
+    ( set updatedSubModel model, Cmd.map tagger subCmd, outMsg )
 
 
 {-| Allows the output of an update function that returns type:
 
-    (model, Cmd msg, outmsg)
+    ( model, Cmd msg, outmsg )
 
 To have its model and out message evaluated in order to produce a new model,
 and to create more commands. The commands returned will be appended to those
@@ -65,12 +59,12 @@ eval func ( model, cmds, outMsg ) =
         ( newModel, moreCmds ) =
             func outMsg model
     in
-        ( newModel, Cmd.batch [ cmds, moreCmds ] )
+    ( newModel, Cmd.batch [ cmds, moreCmds ] )
 
 
 {-| Allows the output of an update function that returns type:
 
-    (model, Cmd msg, outmsg)
+    ( model, Cmd msg, outmsg )
 
 To have its model and out message evaluated in order to produce a new model,
 and to create more commands. The commands returned will be appended to those
@@ -92,7 +86,7 @@ evalMaybe func default ( model, cmds, maybeOutMsg ) =
                 Nothing ->
                     ( model, default )
     in
-        ( newModel, Cmd.batch [ cmds, moreCmds ] )
+    ( newModel, Cmd.batch [ cmds, moreCmds ] )
 
 
 {-| Allows the output of an update function that returns type:
@@ -119,7 +113,7 @@ evalResult func onErr ( model, cmds, resultOutMsg ) =
                 Err error ->
                     ( model, onErr error )
     in
-        ( newModel, Cmd.batch [ cmds, moreCmds ] )
+    ( newModel, Cmd.batch [ cmds, moreCmds ] )
 
 
 {-| Allows the output of an update function that returns type:

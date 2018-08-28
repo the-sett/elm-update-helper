@@ -14,7 +14,7 @@ and messages into a parent one.
 
 Into one that returns:
 
-    (model, Cmd  msg)
+    ( model, Cmd msg )
 
 -}
 lift :
@@ -30,12 +30,12 @@ lift get set tagger update subMsg model =
         ( updatedSubModel, subCmd ) =
             update subMsg (get model)
     in
-        ( set updatedSubModel model, Cmd.map tagger subCmd )
+    ( set updatedSubModel model, Cmd.map tagger subCmd )
 
 
 {-| Allows the output of an update function that returns type:
 
-    (model, Cmd msg)
+    ( model, Cmd msg )
 
 To have its model evaluated in order to produce a new model, and to create more
 commands. The commands returned will be appended to those passed in using
@@ -54,4 +54,4 @@ eval func ( model, cmds ) =
         ( newModel, moreCmds ) =
             func model
     in
-        ( newModel, Cmd.batch [ cmds, moreCmds ] )
+    ( newModel, Cmd.batch [ cmds, moreCmds ] )
