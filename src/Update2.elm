@@ -1,9 +1,9 @@
-module Update2 exposing (eval, lift)
+module Update2 exposing (eval, lift, andThen)
 
 {-| Convenience function for lifting an update function for an inner model
 and messages into a parent one.
 
-@docs eval, lift
+@docs eval, lift, andThen
 
 -}
 
@@ -55,3 +55,17 @@ eval func ( model, cmds ) =
             func model
     in
     ( newModel, Cmd.batch [ cmds, moreCmds ] )
+
+
+{-| Allows update functions to be chained together.
+-}
+andThen :
+    (model -> ( model, Cmd msg ))
+    -> ( model, Cmd msg )
+    -> ( model, Cmd msg )
+andThen fn ( model, cmd ) =
+    let
+        ( nextModel, nextCmd ) =
+            fn model
+    in
+    ( nextModel, Cmd.batch [ cmd, nextCmd ] )
