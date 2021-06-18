@@ -4,6 +4,7 @@ module Update3Alt exposing
     , mapModel, mapCmd, mapOutMsg
     , addOutMsg
     , andThen, andMap
+    , toUpdate3Alt
     )
 
 {-| Convenience function for lifting an update function for an inner model and
@@ -17,8 +18,11 @@ position in the return tuple, instead of the last.
 @docs mapModel, mapCmd, mapOutMsg
 @docs addOutMsg
 @docs andThen, andMap
+@docs toUpdate3Alt
 
 -}
+
+import Tuple3
 
 
 {-| Lifts an update function of type:
@@ -197,3 +201,11 @@ andMap fn ( model, outMsg, cmd ) =
             fn outMsg model
     in
     ( nextModel, nextOutMsgs, Cmd.batch [ cmd, nextCmd ] )
+
+
+{-| Swaps the order of the return arguments to the alternative order used by
+this module.
+-}
+toUpdate3Alt : (msg -> model -> ( model, Cmd msg, outMsg )) -> msg -> model -> ( model, outMsg, Cmd msg )
+toUpdate3Alt fn msg model =
+    fn msg model |> Tuple3.swapLast

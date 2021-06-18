@@ -4,6 +4,7 @@ module Update3 exposing
     , mapModel, mapCmd, mapOutMsg
     , addOutMsg
     , andThen, andMap
+    , fromUpdate3Alt
     )
 
 {-| Convenience function for lifting an update function for an inner model and
@@ -14,8 +15,11 @@ messages, that also returns an additional out parameters into a parent one.
 @docs mapModel, mapCmd, mapOutMsg
 @docs addOutMsg
 @docs andThen, andMap
+@docs fromUpdate3Alt
 
 -}
+
+import Tuple3
 
 
 {-| Lifts an update function of type:
@@ -194,3 +198,11 @@ andMap fn ( model, cmd, outMsg ) =
             fn outMsg model
     in
     ( nextModel, Cmd.batch [ cmd, nextCmd ], nextOutMsgs )
+
+
+{-| Swaps the order of the return arguments from the alternative order to
+the default order used by this module.
+-}
+fromUpdate3Alt : (msg -> model -> ( model, outMsg, Cmd msg )) -> msg -> model -> ( model, Cmd msg, outMsg )
+fromUpdate3Alt fn msg model =
+    fn msg model |> Tuple3.swapLast
