@@ -3,7 +3,7 @@
     "name": "the-sett/elm-update-helper",
     "summary": "Helper functions for nesting updates in Elm.",
     "license": "BSD-3-Clause",
-    "version": "1.5.0",
+    "version": "2.0.0",
     "exposed-modules": [
         "Update2",
         "Update3",
