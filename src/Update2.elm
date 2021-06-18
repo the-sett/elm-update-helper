@@ -1,9 +1,9 @@
-module Update2 exposing (eval, lift, andThen)
+module Update2 exposing (eval, lift, andThen, andMap)
 
 {-| Convenience function for lifting an update function for an inner model
 and messages into a parent one.
 
-@docs eval, lift, andThen
+@docs eval, lift, andThen, andMap
 
 -}
 
@@ -57,13 +57,30 @@ eval func ( model, cmds ) =
     ( newModel, Cmd.batch [ cmds, moreCmds ] )
 
 
-{-| Allows update functions to be chained together.
+{-| Allows update functions to be chained together. The `Cmd`s will be batched
+together.
 -}
 andThen :
     (model -> ( model, Cmd msg ))
     -> ( model, Cmd msg )
     -> ( model, Cmd msg )
 andThen fn ( model, cmd ) =
+    let
+        ( nextModel, nextCmd ) =
+            fn model
+    in
+    ( nextModel, Cmd.batch [ cmd, nextCmd ] )
+
+
+{-| Allows update functions that also produce lists of out messages,
+to be chained together, whilst also transforming the model and outMsg
+type. The `Cmd`s will be batched together.
+-}
+andMap :
+    (model -> ( model2, Cmd msg ))
+    -> ( model, Cmd msg )
+    -> ( model2, Cmd msg )
+andMap fn ( model, cmd ) =
     let
         ( nextModel, nextCmd ) =
             fn model

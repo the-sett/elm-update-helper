@@ -3,7 +3,7 @@ module Update3Alt exposing
     , eval, evalMaybe, evalResult, evalCmds
     , mapModel, mapCmd, mapOutMsg
     , addOutMsg
-    , andThen
+    , andThen, andMap
     )
 
 {-| Convenience function for lifting an update function for an inner model and
@@ -16,7 +16,7 @@ position in the return tuple, instead of the last.
 @docs eval, evalMaybe, evalResult, evalCmds
 @docs mapModel, mapCmd, mapOutMsg
 @docs addOutMsg
-@docs andThen
+@docs andThen, andMap
 
 -}
 
@@ -168,16 +168,32 @@ addOutMsg outmsg ( model, cmd ) =
 
 
 {-| Allows update functions that also produce lists of out messages,
-to be chained together. The `Cmd`s and the out messages will be batched
-together.
+to be chained together. The `Cmd`s will be batched together, but
+out messages will not.
 -}
 andThen :
-    (model -> ( model, List outMsgs, Cmd msg ))
-    -> ( model, List outMsgs, Cmd msg )
-    -> ( model, List outMsgs, Cmd msg )
-andThen fn ( model, outMsgs, cmd ) =
+    (outMsg -> model -> ( model, outMsg, Cmd msg ))
+    -> ( model, outMsg, Cmd msg )
+    -> ( model, outMsg, Cmd msg )
+andThen fn ( model, outMsg, cmd ) =
+    let
+        ( nextModel, nextOutMsg, nextCmd ) =
+            fn outMsg model
+    in
+    ( nextModel, nextOutMsg, Cmd.batch [ cmd, nextCmd ] )
+
+
+{-| Allows update functions that also produce lists of out messages,
+to be chained together, whilst also transforming the model and outMsg
+type. The `Cmd`s will be batched together, but out messages will not.
+-}
+andMap :
+    (outMsg -> model -> ( model2, outMsg2, Cmd msg ))
+    -> ( model, outMsg, Cmd msg )
+    -> ( model2, outMsg2, Cmd msg )
+andMap fn ( model, outMsg, cmd ) =
     let
         ( nextModel, nextOutMsgs, nextCmd ) =
-            fn model
+            fn outMsg model
     in
-    ( nextModel, nextOutMsgs ++ outMsgs, Cmd.batch [ cmd, nextCmd ] )
+    ( nextModel, nextOutMsgs, Cmd.batch [ cmd, nextCmd ] )
