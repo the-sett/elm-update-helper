@@ -1,4 +1,4 @@
-module Update2 exposing (pure, eval, lift, andThen, andMap)
+module Update2 exposing (pure, map, eval, lift, andThen, andMap)
 
 {-| Convenience function for lifting an update function for an inner model
 and messages into a parent one.
@@ -17,6 +17,14 @@ and messages into a parent one.
 pure : model -> ( model, Cmd msg )
 pure model =
     ( model, Cmd.none )
+
+
+
+{-| Maps a function over the model in an update.
+-}
+map : (a -> b) -> ( a, Cmd msg ) -> ( b, Cmd msg )
+map fn ( model, cmds ) =
+    ( fn model, cmds )
 
 
 {-| Lifts an update function of type:
