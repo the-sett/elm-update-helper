@@ -3,7 +3,7 @@ module Update2 exposing (pure, map, eval, lift, andThen, andMap)
 {-| Convenience function for lifting an update function for an inner model
 and messages into a parent one.
 
-@docs pure, eval, lift, andThen, andMap
+@docs pure, map, eval, lift, andThen, andMap
 
 -}
 
